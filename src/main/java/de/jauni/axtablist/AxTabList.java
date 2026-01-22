@@ -1,18 +1,38 @@
 package de.jauni.axtablist;
 
 import de.jauni.axtablist.listener.PlayerJoinListener;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class AxTabList extends JavaPlugin {
+
+    private File langFile;
+    private FileConfiguration langConfig;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        createLangFile();
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    private void createLangFile() {
+        langFile = new File(getDataFolder(), "lang.yml");
+        if (!langFile.exists()) {
+            saveResource("lang.yml", false);
+        }
+        langConfig = YamlConfiguration.loadConfiguration(langFile);
+    }
+
+    public String getMessage(String path) {
+        return langConfig.getString(path);
     }
 }
