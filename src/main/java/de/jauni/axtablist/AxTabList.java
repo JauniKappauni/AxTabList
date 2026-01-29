@@ -61,4 +61,13 @@ public final class AxTabList extends JavaPlugin {
     public void reloadLangFile() {
         langConfig = YamlConfiguration.loadConfiguration(langFile);
     }
+
+    public void updateScoreboard(Player p){
+        p.setPlayerListHeader(PlaceholderAPI.setPlaceholders(p, getMessage("tablist.header")));
+        p.setPlayerListFooter(PlaceholderAPI.setPlaceholders(p, getMessage("tablist.footer")));
+    }
+
+    public void startTablistUpdater(Player p){
+        Bukkit.getScheduler().runTaskTimer(this, () -> updateScoreboard(p), 20L, 20L);
+    }
 }
